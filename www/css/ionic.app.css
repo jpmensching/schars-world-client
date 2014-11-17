@@ -7843,6 +7843,16 @@ $ios-transition-box-shadow-end: -200px 0px 200px rgba(0,0,0,0.15), -5px 0px 5px 
     padding-left: 1em;
     padding-right: 1em; }
 
+h3 {
+  color: #fff; }
+
 .list .item {
   border: none;
   background: rgba(0, 0, 0, 0.3); }
+
+.popup-container .popup {
+  background: transparent;
+  color: #fff; }
+  .popup-container .popup button {
+    background: transparent;
+    color: #fff; }
