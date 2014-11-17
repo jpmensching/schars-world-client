@@ -51,6 +51,7 @@ angular.module('ScharsWorld', ['ionic'])
     $ionicLoading.show({
         template: 'Loading'
     });
+    $scope.title = $stateParams.slug.replace(/_/g, ' ');
     ApiService.getCategory($stateParams.slug).then(function(data) {
         $scope.items = data;
 
@@ -77,7 +78,7 @@ angular.module('ScharsWorld', ['ionic'])
                 {
                     text: 'Go Back',
                     onTap: function(event) {
-                        console.log($ionicNavBarDelegate.back());
+                        $ionicNavBarDelegate.back();
                     }
                 }
             ]
@@ -90,6 +91,7 @@ angular.module('ScharsWorld', ['ionic'])
     ApiService.getArticle($stateParams.id).then(function(data) {
         $scope.article = data;
         $ionicLoading.hide();
+        $scope.title = data.sections[0].title;
     });
 })
 

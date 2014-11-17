@@ -1,9 +1,13 @@
-<div class="list">
-	<a class="item item-icon-right"
-		ng-repeat="item in items"
-		href="{{ item.url }}">
-		{{item.title}}
-		<i class="icon ion-android-arrow-forward" ng-if="item.type === 'category'"></i>
-		<i class="icon ion-android-note" ng-if="item.type === 'article'"></i>
-	</a>
-</div>
+<ion-view title="{{title}}">
+	<ion-content class="padding">
+		<div class="list">
+			<a class="item item-icon-right"
+				ng-repeat="item in items"
+				href="{{ item.url }}">
+				{{item.title}}
+				<i class="icon ion-android-arrow-forward" ng-if="item.type === 'category'"></i>
+				<i class="icon ion-android-note" ng-if="item.type === 'article'"></i>
+			</a>
+		</div>
+	</ion-content>
+</ion-view>

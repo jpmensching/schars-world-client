@@ -1,13 +1,17 @@
-<article>
-	<section ng-repeat="section in article.sections">
-		<h3 ng-bind="section.title"></h3>
-		<div ng-repeat="block in section.content">
-			<p ng-bind="block.text" ng-if="block.type === 'paragraph'"></p>
-			<div class="list">
-				<div class="item" ng-repeat="item in block.elements">
-					<a class="item" ng-bind="item.text"></a>
+<ion-view title="{{title}}">
+	<ion-content class="padding">
+		<article>
+			<section ng-repeat="section in article.sections">
+				<h3 ng-bind="section.title"></h3>
+				<div ng-repeat="block in section.content">
+					<p ng-bind="block.text" ng-if="block.type === 'paragraph'"></p>
+					<div class="list">
+						<div class="item" ng-repeat="item in block.elements">
+							<a class="item">- {{item.text}}</a>
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
-	</section>
-</article>
+			</section>
+		</article>
+	</ion-content>
+</ion-view>
