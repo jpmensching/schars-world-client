@@ -1,0 +1,20 @@
+<ion-view title="Search">
+	<ion-content class="padding">
+		<p>Searching for '<span ng-bind="terms"></span>'</p>
+		<p ng-if="total">Found {{total}} results</p>
+		<p ng-if="total === 0">No results</p>
+		<div class="list">
+			<a class="item item-icon-right" ng-repeat="result in results" href="#/articles/{{result.id}}">
+				{{result.title}}
+				<i class="icon ion-android-note"></i>
+			</a>
+		</div>
+		<button class="button button-light show-more-results" ng-click="showMore()" ng-if="moreAvailable">Show more results</button>
+		<form ng-submit="search()" ng-if="!moreAvailable">
+			<label class="item item-input">
+				<i class="icon ion-search placeholder-icon"></i>
+				<input type="text" placeholder="Search" ng-model="newTerms.term">
+			</label>
+		</form>
+	</ion-content>
+</ion-view>

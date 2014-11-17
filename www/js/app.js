@@ -34,10 +34,15 @@ angular.module('ScharsWorld', ['ionic'])
             templateUrl: 'templates/article.html',
             controller: 'ArticleController'
         })
+        .state('search', {
+            url: '/search?q',
+            templateUrl: 'templates/search.html',
+            controller: 'SearchController'
+        })
     $urlRouterProvider.otherwise("/");
 })
 
-.controller('CategoriesController', function($scope, $ionicLoading, ApiService) {
+.controller('CategoriesController', function($scope, $state, $ionicLoading, ApiService) {
     $ionicLoading.show({
         template: 'Loading'
     });
@@ -45,6 +50,15 @@ angular.module('ScharsWorld', ['ionic'])
         $scope.categories = data;
         $ionicLoading.hide();
     });
+    // Bound type needs to be an object to pass by reference
+    $scope.searchTerms = {
+        term: ''
+    }
+    $scope.search = function() {
+        $state.go('search', {
+            q: $scope.searchTerms.term
+        });
+    }
 })
 
 .controller('CategoryController', function($scope, $ionicLoading, $ionicPopup, $ionicNavBarDelegate, ApiService, $stateParams) {
@@ -95,6 +109,46 @@ angular.module('ScharsWorld', ['ionic'])
     });
 })
 
+.controller('SearchController', function($scope, $state, $stateParams, $ionicLoading, ApiService) {
+    $scope.newTerms = {
+        term: ''
+    };
+    $scope.terms = $stateParams.q;
+    if (typeof $scope.terms !== 'undefined') {
+        $scope.batch = 1;
+        $ionicLoading.show();
+        ApiService.search($scope.terms, $scope.batch).then(function(data) {
+            $scope.results = data.items;
+            $scope.total   = data.total;
+            $scope.moreAvailable = true;
+            $ionicLoading.hide();
+
+            if (typeof data.exception !== 'undefined') {
+                $scope.moreAvailable = false;
+                $scope.total = 0;
+            }
+        });
+    }
+    $scope.showMore = function() {
+        $scope.batch++;
+        $ionicLoading.show();
+        ApiService.search($scope.terms, $scope.batch).then(function(data) {
+            angular.forEach(data.items, function(item) {
+                $scope.results.push(item);
+            });
+            if ($scope.batch === data.batches) {
+                $scope.moreAvailable = false;
+            }
+            $ionicLoading.hide();
+        });
+    }
+    $scope.search = function() {
+        $state.go('search', {
+            q: $scope.newTerms.term
+        });
+    }
+})
+
 .service('ApiService', function(StorageService, $q, $http) {
     var baseUrl = '';
     if ((window.location + '').indexOf('localhost') !== -1) {
@@ -140,6 +194,15 @@ angular.module('ScharsWorld', ['ionic'])
                     deferred.resolve(data);
                 });
             }
+            return deferred.promise;
+        },
+        search: function(terms, batch) {
+            var deferred = $q.defer();
+            $http.get(baseUrl + 'search/' + terms + '/' + batch + '/').success(function(data) {
+                deferred.resolve(data);
+            }).error(function(error) {
+                deferred.reject(error);
+            });
             return deferred.promise;
         }
     }
