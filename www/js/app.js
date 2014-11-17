@@ -43,11 +43,15 @@ angular.module('ScharsWorld', ['ionic'])
 })
 
 .controller('CategoriesController', function($scope, $state, $ionicLoading, ApiService) {
+    $scope.error = false;
     $ionicLoading.show({
         template: 'Loading'
     });
     ApiService.getCategories().then(function(data) {
         $scope.categories = data;
+        $ionicLoading.hide();
+    }, function(error) {
+        $scope.error = true;
         $ionicLoading.hide();
     });
     // Bound type needs to be an object to pass by reference
@@ -106,6 +110,20 @@ angular.module('ScharsWorld', ['ionic'])
         $scope.article = data;
         $ionicLoading.hide();
         $scope.title = data.sections[0].title;
+    }, function(error) {
+        $ionicLoading.hide();
+        $ionicPopup.show({
+            template: 'That article does not exist.',
+            title: 'Sorry',
+            buttons: [
+                {
+                    text: 'Go Back',
+                    onTap: function(event) {
+                        $ionicNavBarDelegate.back();
+                    }
+                }
+            ]
+        });
     });
 })
 
@@ -159,41 +177,30 @@ angular.module('ScharsWorld', ['ionic'])
     return {
         getCategories: function() {
             var deferred   = $q.defer();
-            var categories = StorageService.get('categories');
-            if (categories) {
-                deferred.resolve(JSON.parse(categories));
-            } else {
-                $http.get(baseUrl + 'categories/').success(function(data) {
-                    deferred.resolve(data.items);
-                    sessionStorage.setItem('categories', JSON.stringify(data.items));
-                });
-            }
+            $http.get(baseUrl + 'categories/').success(function(data) {
+                deferred.resolve(data.items);
+                sessionStorage.setItem('categories', JSON.stringify(data.items));
+            }).error(function(error) {
+                deferred.reject(error);
+            });
             return deferred.promise;
         },
         getCategory: function(title) {
             var deferred = $q.defer();
-            var category = StorageService.get('categories.' + title);
-            if (category) {
-                deferred.resolve(category);
-            } else {
-                $http.get(baseUrl + 'categories/' + title + '/').success(function(data) {
-                    deferred.resolve(data.items);
-                }).error(function(error) {
-                    deferred.reject(error);
-                });
-            }
+            $http.get(baseUrl + 'categories/' + title + '/').success(function(data) {
+                deferred.resolve(data.items);
+            }).error(function(error) {
+                deferred.reject(error);
+            });
             return deferred.promise;
         },
         getArticle: function(title) {
             var deferred = $q.defer();
-            var article  = StorageService.get('articles.' + title);
-            if (article) {
-                deferred.resolve(article);
-            } else {
-                $http.get(baseUrl + 'articles/' + title + '/').success(function(data) {
-                    deferred.resolve(data);
-                });
-            }
+            $http.get(baseUrl + 'articles/' + title + '/').success(function(data) {
+                deferred.resolve(data);
+            }).error(function(error) {
+                deferred.reject(error);
+            });
             return deferred.promise;
         },
         search: function(terms, batch) {

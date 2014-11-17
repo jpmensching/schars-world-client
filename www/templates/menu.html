@@ -1,19 +1,24 @@
 <ion-view title="Schar's World">
 	<ion-content class="padding">
-		<h2>
-			Browse
-		</h2>
-		<div class="list">
-			<a class="item item-icon-right" ng-repeat="category in categories" href="#/categories/{{category.title.replace(' ', '_')}}">
-				{{category.title}}
-				<i class="icon ion-android-arrow-forward"></i>
-			</a>
-		</div>
-		<form ng-submit="search()">
-			<label class="item item-input">
-				<i class="icon ion-search placeholder-icon"></i>
-				<input type="text" placeholder="Search" ng-model="searchTerms.term">
-			</label>
-		</form>
+		<section ng-if="!error">
+			<h2>
+				Browse
+			</h2>
+			<div class="list">
+				<a class="item item-icon-right" ng-repeat="category in categories" href="#/categories/{{category.title.replace(' ', '_')}}">
+					{{category.title}}
+					<i class="icon ion-android-arrow-forward"></i>
+				</a>
+			</div>
+			<form ng-submit="search()">
+				<label class="item item-input">
+					<i class="icon ion-search placeholder-icon"></i>
+					<input type="text" placeholder="Search" ng-model="searchTerms.term">
+				</label>
+			</form>
+		</section>
+		<section ng-if="error">
+			Sorry, we're having trouble with our servers. Please try again later.
+		</section>
 	</ion-content>
 </ion-view>
