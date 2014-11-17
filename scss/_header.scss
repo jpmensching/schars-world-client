@@ -1,0 +1,22 @@
+.bar {
+	&.bar-stable {
+		background: transparent;
+		border-bottom: none;
+		height: 30px;
+
+		.title {
+			color: #fff;
+			height: 30px;
+		}
+	}
+
+	&.bar-subheader {
+		background: transparent;
+		border-top: none;
+		top: 25px;
+
+		.title {
+			color: #9D9D9D;
+		}
+	}
+}
