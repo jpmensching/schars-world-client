@@ -177,30 +177,47 @@ angular.module('ScharsWorld', ['ionic'])
     return {
         getCategories: function() {
             var deferred   = $q.defer();
-            $http.get(baseUrl + 'categories/').success(function(data) {
-                deferred.resolve(data.items);
-                sessionStorage.setItem('categories', JSON.stringify(data.items));
-            }).error(function(error) {
-                deferred.reject(error);
-            });
+            var categories = StorageService.get('categories');
+            if (categories) {
+                deferred.resolve(JSON.parse(categories));
+            } else {
+                $http.get(baseUrl + 'categories/').success(function(data) {
+                    deferred.resolve(data.items);
+                    StorageService.set('categories', JSON.stringify(data.items));
+                }).error(function(error) {
+                    deferred.reject(error);
+                });
+            }
             return deferred.promise;
         },
         getCategory: function(title) {
             var deferred = $q.defer();
-            $http.get(baseUrl + 'categories/' + title + '/').success(function(data) {
-                deferred.resolve(data.items);
-            }).error(function(error) {
-                deferred.reject(error);
-            });
+            var category = StorageService.get('categories:' + title);
+            if (category) {
+                deferred.resolve(JSON.parse(category));
+            } else {
+                $http.get(baseUrl + 'categories/' + title + '/').success(function(data) {
+                    deferred.resolve(data.items);
+                    StorageService.set('categories:' + title, JSON.stringify(data.items));
+                }).error(function(error) {
+                    deferred.reject(error);
+                });
+            }
             return deferred.promise;
         },
         getArticle: function(title) {
             var deferred = $q.defer();
-            $http.get(baseUrl + 'articles/' + title + '/').success(function(data) {
-                deferred.resolve(data);
-            }).error(function(error) {
-                deferred.reject(error);
-            });
+            var article  = StorageService.get('articles:' + title);
+            if (article) {
+                deferred.resolve(JSON.parse(article));
+            } else {
+                $http.get(baseUrl + 'articles/' + title + '/').success(function(data) {
+                    deferred.resolve(data);
+                    StorageService.set('articles:' + title, JSON.stringify(data));
+                }).error(function(error) {
+                    deferred.reject(error);
+                });
+            }
             return deferred.promise;
         },
         search: function(terms, batch) {
@@ -222,6 +239,13 @@ angular.module('ScharsWorld', ['ionic'])
                 return null;
             } else {
                 return sessionStorage.getItem(key);
+            }
+        },
+        set: function(key, value) {
+            if (typeof sessionStorage === 'undefined') {
+                return;
+            } else {
+                sessionStorage.setItem(key, value);
             }
         }
     }
