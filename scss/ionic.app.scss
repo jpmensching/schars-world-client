@@ -65,3 +65,16 @@ h3 {
 		}
 	}
 }
+
+input[type="text"] {
+	color: #fff;
+}
+
+.button.button-light {
+	background: transparent;
+	color: #fff;
+
+	&.show-more-results {
+		width: 100%;
+	}
+}

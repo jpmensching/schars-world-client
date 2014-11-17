@@ -7856,3 +7856,12 @@ h3 {
   .popup-container .popup button {
     background: transparent;
     color: #fff; }
+
+input[type="text"] {
+  color: #fff; }
+
+.button.button-light {
+  background: transparent;
+  color: #fff; }
+  .button.button-light.show-more-results {
+    width: 100%; }
