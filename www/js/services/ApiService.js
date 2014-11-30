@@ -1,10 +1,5 @@
 angular.module('ScharsWorld').service('ApiService', function(StorageService, $q, $http) {
-    var baseUrl = '';
-    if ((window.location + '').indexOf('localhost') !== -1) {
-        baseUrl = 'http://localhost:8090/wikia/';
-    } else {
-        // TODO
-    }
+    var baseUrl = 'https://immense-wildwood-2952.herokuapp.com/api/';
     return {
         getCategories: function() {
             var deferred   = $q.defer();
